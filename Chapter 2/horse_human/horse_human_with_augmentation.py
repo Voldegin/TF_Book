@@ -23,7 +23,10 @@ def create_generator(url, filename, directory):
     # zip_ref.extractall(directory)
     # zip_ref.close()
 
-    generator_func = ImageDataGenerator(rescale=1 / 255)
+    generator_func = ImageDataGenerator(rescale=1 / 255, rotation_range=40, width_shift_range=0.2,
+                                        height_shift_range=0.4, shear_range=0.2, zoom_range=0.2,
+                                        horizontal_flip=True, fill_mode='nearest'
+                                        )
     generator = generator_func.flow_from_directory(directory, target_size=(300, 300), class_mode='binary')
     return generator
 
@@ -59,7 +62,7 @@ train_generator = create_generator(train_url, train_filename, train_dir)
 model = define_model()
 model.fit(train_generator, epochs=15, validation_data=validation_generator)
 
-model_path = r"F:\VOLD\ML\TF Book\Chapter 2\horse_human\horse_human"
+model_path = r"F:\VOLD\ML\TF Book\Chapter 2\horse_human\horse_human_with_augmentation"
 shutil.rmtree(model_path)
 os.makedirs(model_path)
 model.save(model_path)
